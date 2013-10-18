@@ -19,6 +19,8 @@ define('DOCROOT', __DIR__.DIRECTORY_SEPARATOR);
 define('UPLOADPATH', realpath(__DIR__.DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR);
 define('DBPATH', __DIR__.DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR.'sqlitedb');
 
+define('TPL_DOWNLOAD', __DIR__.DIRECTORY_SEPARATOR.'tpl'.DIRECTORY_SEPARATOR.'download.tpl');
+
 
 //try to set the maximum execution time to 60min
 set_time_limit(3600);
@@ -62,7 +64,7 @@ function init($db)
 	}
 	else if(isset($_GET['download']))
 	{
-		tmplate_download($_GET['download']);
+		tmplate_download($db, $_GET['download']);
 	}
 	else if($_FILES)
 	{
@@ -84,6 +86,12 @@ function display_fileget($db, $hash)
 		$sql = "SELECT * FROM files WHERE hash = \"$hash\" AND expire > $now;";
 		$query = $db->query($sql);
 		$result = $query->fetch();
+
+		if(!$result)
+		{
+			page_not_found();
+		}
+		
 		$filename = $result['filename'];
 	}
 	catch (Exception $e)
@@ -211,6 +219,13 @@ function display_error($msg)
 	echo $msg;
 }
 
+function page_not_found()
+{
+		header("HTTP/1.1 404 Not Found");
+		echo "404 Not Found";
+		exit;
+}
+
 function codeToMessage($code) 
 { 
 	switch ($code)
@@ -297,19 +312,37 @@ function get_expire_dt($expire)
 	return $limit_dt;
 }
 
-
-function tmplate_download($hash)
+function tmplate_download($db, $hash)
 {
 	$urls = parse_url('http://'.$_SERVER["SERVER_NAME"].$_SERVER['REQUEST_URI']);
 	$path = isset($urls['path']) ? $urls['path'] : '';
 	$url = 'http://'.$urls['host'].$path.'?file='.$hash;
-?>
-<html>
-<body>
-	<a href="<?php echo $url; ?>">ファイルをダウンロードします。</a>
-</body>
-</html>
-<?php
+
+	try
+	{
+		$sql = "SELECT * FROM files WHERE hash = \"$hash\";";
+		$query = $db->query($sql);
+		$result = $query->fetch();
+
+		if(!$result)
+		{
+			page_not_found();
+		}
+		
+		$filename = $result['filename'];
+	}
+	catch (Exception $e)
+	{
+		display_error($e->getTraceAsString());
+		return false;
+	}
+
+	$param['url'] = $url;
+	$param['filename'] = $filename;
+
+	$html = file_get_contents(TPL_DOWNLOAD);
+	$html = preg_replace('/{{(.+?)}}/e', '$param[\'$1\']', $html);
+	echo $html;
 }
 
 function template_upload()
