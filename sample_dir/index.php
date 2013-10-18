@@ -338,7 +338,7 @@ function tmplate_download($db, $hash)
 	}
 
 	$param['url'] = $url;
-	$param['filename'] = $filename;
+	$param['filename'] = htmlspecialchars($filename);
 
 	$html = file_get_contents(TPL_DOWNLOAD);
 	$html = preg_replace('/{{(.+?)}}/e', '$param[\'$1\']', $html);

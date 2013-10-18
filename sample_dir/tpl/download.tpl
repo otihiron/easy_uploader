@@ -106,11 +106,11 @@ p{
 		</div>
 		<div class="messages">
 			<p>いつもありがとうございます。以下のファイルをお受け取り下さい。</p>
-			<p class="en">You have a file or files from Case Inc. as follows. Your file(s) is/are available for download.</p>
+			<p class="en">Your file(s) is/are available for download.</p>
 		</div>
 		<div class="files_wrapper">
 			<div class="files">
-				<p class="filename">{{filename}}</p>
+				<p class="filename">File&nbsp;:&nbsp;{{filename}}</p>
 				<a href="{{url}}" class="button">DOWNLOAD</a>
 			</div>
 		<div>
