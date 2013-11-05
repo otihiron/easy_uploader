@@ -99,7 +99,7 @@ function display_fileget($db, $hash)
 		display_error($e->getTraceAsString());
 		return false;
 	}
-	$sjis_filename = mb_convert_encoding($filename, "SJIS-win", "UTF-8");
+	
 	$filepath = get_upload_filedir($hash).$hash;
 	download($filepath, $filename);
 }
@@ -112,26 +112,34 @@ function download($input_filename, $output_filename = '') {
     if ((string)$output_filename === '') {
         $output_filename = $input_filename;
     }
+    /*
     $output_filename = mb_convert_encoding(
         $output_filename,
         'UTF-8',
         'ASCII,JIS,UTF-8,CP51932,SJIS-win'
     );
+    */
     switch (true) {
+    	
         case !isset($_SERVER['HTTP_USER_AGENT']):
         case !preg_match($pattern, $_SERVER['HTTP_USER_AGENT'], $matches):
+        /*
         case !isset($matches[1]):
             $enc = '=?utf-8?B?' . base64_encode($output_filename) . '?=';
+        	
             header('Content-Disposition: attachment; filename="' . $enc . '"');
             break;
         case !isset($matches[2]):
             $enc = "utf-8'ja'" . urlencode($output_filename);
             header('Content-Disposition: attachment; filename*=' . $enc);
             break;
-        case !isset($matches[3]):
-            $enc = urlencode($output_filename);
+        */
+        case isset($matches[3]):
+            //$enc = urlencode($output_filename);
+        	$enc = mb_convert_encoding($output_filename, "SJIS-win", "UTF-8");
             header('Content-Disposition: attachment; filename="' . $enc . '"');
             break;
+        
         default:
             header('Content-Disposition: attachment; filename="' .$output_filename . '"');
     }
