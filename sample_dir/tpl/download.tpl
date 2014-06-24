@@ -6,7 +6,7 @@
 <meta http-equiv="content-style-type" content="text/css" />
 <meta http-equiv="content-script-type" content="text/javascript" />
 <meta name="robots" content="NOINDEX,NOFOLLOW" />
-<title>CASE Inc. Files</title>
+<title>Bunnyhop Inc. Files</title>
 <link href='http://fonts.googleapis.com/css?family=Oldenburg' rel='stylesheet' type='text/css'>
 <style type="text/css">
 <!--
@@ -214,7 +214,7 @@ p{
 		<div>
 	</div>
 	<div class="footer">
-		<p>Copyright &copy; 2013 CASE Inc.</p>
+		<p>Copyright &copy; 2014 Bunnyhop Inc.</p>
 	</div>
 </div>
 <script>(function(d, s, id) {
